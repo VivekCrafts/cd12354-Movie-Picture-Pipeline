@@ -4,7 +4,13 @@ on:
   pull_request:
     branches:
       - main
+    paths:
+      - 'starter/frontend/**'
+      - '.github/workflows/frontend-ci.yaml'
   workflow_dispatch:
+
+env:
+  REACT_APP_MOVIE_API_URL: http://localhost:5000
 
 jobs:
   lint:
@@ -12,10 +18,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup NodeJS
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version-file: starter/frontend/.nvmrc
           cache: npm
@@ -34,10 +40,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup NodeJS
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version-file: starter/frontend/.nvmrc
           cache: npm
@@ -59,10 +65,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup NodeJS
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version-file: starter/frontend/.nvmrc
           cache: npm
@@ -78,4 +84,8 @@ jobs:
 
       - name: Build Docker image
         working-directory: starter/frontend
-        run: docker build -t movie-frontend:ci .
+        run: |
+          docker build \
+            --build-arg REACT_APP_MOVIE_API_URL="${{ env.REACT_APP_MOVIE_API_URL }}" \
+            -t movie-frontend:ci \
+            .

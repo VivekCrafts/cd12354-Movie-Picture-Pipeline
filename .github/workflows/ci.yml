@@ -43,6 +43,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Build Docker image
         working-directory: starter/backend
-        run: docker build -t movie-backend:ci .
+        run: docker build -t vivekv27/movie-backend:latest .
+
+      - name: Push Docker image
+        run: docker push vivekv27/movie-backend:latest
